@@ -728,16 +728,17 @@ GAMES.diketo=G=>{const S={left:12,caught:0,lives:5,phase:'wait',wait:1.2,y:0,vy:
   return m};
 
 /* 3 o'clock · The Hiding Place · find her behind the blocks */
-GAMES.hide=G=>{const R=[3,3,4,4,5],SW=[3,5,7,9,11],SP=[.75,.62,.52,.44,.36];
-  const S={round:0,correct:0,phase:'show',t:1.6,pos:[],under:0,swaps:0,sw:null,pick:-1,reveal:0,lives:5};
+GAMES.hide=G=>{const R=[3,3,4,4,5],SW=[3,4,6,7,9],SP=[.9,.78,.68,.6,.52];
+  const S={round:0,correct:0,phase:'show',t:1.6,low:0,gap:0,pos:[],under:0,swaps:0,sw:null,pick:-1,reveal:0,lives:5};
   const m={title:'The Hiding Place',tip:'Watch the block she hides behind. Follow it as the blocks shuffle, then tap it.',unit:'found',g1:2,g2:4};
-  function setup(){const n=R[S.round];S.pos=[...Array(n).keys()];S.under=ri(0,n-1);S.phase='show';S.t=1.4;S.swaps=SW[S.round];S.pick=-1}
+  function setup(){const n=R[S.round];if(S.pos.length!==n)S.pos=[...Array(n).keys()];S.under=ri(0,n-1);S.phase='show';S.t=1.6;S.low=0;S.gap=0;S.swaps=SW[S.round];S.pick=-1}
   setup();
   const slot=(i,n)=>({x:G.W*(i+1)/(n+1),y:G.H*.56});
   m.update=dt=>{S.t-=dt;
-    if(S.phase==='show'&&S.t<=0){S.phase='swap';S.sw=null;G.hint(null)}
-    if(S.phase==='swap'){if(!S.sw){if(S.swaps<=0){S.phase='pick';if(S.round===0)G.hint('tap');return}const n=R[S.round];let a=ri(0,n-1),b=ri(0,n-2);if(b>=a)b++;S.sw={a,b,t:0,d:SP[S.round]};S.swaps--;G.sfx('tick')}
-      else{S.sw.t+=dt;if(S.sw.t>=S.sw.d){const {a,b}=S.sw;const ia=S.pos.indexOf(a),ib=S.pos.indexOf(b);S.pos[ia]=b;S.pos[ib]=a;S.sw=null}}}
+    if(S.phase==='show'&&S.t<=0){S.phase='lower';S.low=0;G.hint(null)}
+    if(S.phase==='lower'){S.low=Math.min(1,S.low+dt/.45);if(S.low>=1){S.phase='swap';S.sw=null;S.gap=.45}}
+    if(S.phase==='swap'){if(!S.sw&&S.gap>0){S.gap-=dt;return}if(!S.sw){if(S.swaps<=0){S.phase='pick';if(S.round===0)G.hint('tap');return}const n=R[S.round];let a=ri(0,n-1),b=ri(0,n-2);if(b>=a)b++;S.sw={a,b,t:0,d:SP[S.round]};S.swaps--;G.sfx('tick')}
+      else{S.sw.t+=dt;if(S.sw.t>=S.sw.d){const {a,b}=S.sw;const t=S.pos[a];S.pos[a]=S.pos[b];S.pos[b]=t;S.sw=null;S.gap=.12+(.2-S.round*.03)}}}
     if(S.phase==='reveal'&&S.t<=0){S.round++;if(S.round>=R.length)G.end(S.correct);else setup()}
     G.hud({score:S.correct,goal:5,label:'Round '+Math.min(S.round+1,5)+' of 5'})};
   // pos[k] = slot index currently holding block k
@@ -747,7 +748,7 @@ GAMES.hide=G=>{const R=[3,3,4,4,5],SW=[3,5,7,9,11],SP=[.75,.62,.52,.44,.36];
     const n=R[S.round];if(!n)return;const bw=Math.min(90,W/(n+1)*.8),bh=bw*1.1;
     for(let k=0;k<n;k++){let s=slot(S.pos[k],n),x=s.x,y=s.y;
       if(S.sw&&(k===S.sw.a||k===S.sw.b)){const o=k===S.sw.a?S.sw.b:S.sw.a,from=slot(S.pos[k],n),to=slot(S.pos[o],n),f=S.sw.t/S.sw.d,e=f<.5?2*f*f:1-Math.pow(-2*f+2,2)/2;x=from.x+(to.x-from.x)*e;y=from.y+(k===S.sw.a?-1:1)*Math.sin(f*Math.PI)*40}
-      const lift=(S.phase==='show'||(S.phase==='reveal'&&(k===S.pick||k===S.under)))?-bh*.85:0;
+      const up=S.phase==='show'?1:S.phase==='lower'?1-(S.low<.5?2*S.low*S.low:1-Math.pow(-2*S.low+2,2)/2):0,lift=(up>0||(S.phase==='reveal'&&(k===S.pick||k===S.under)))?-bh*.85*(S.phase==='reveal'?1:up):0;
       if(k===S.under&&lift)sister(c,x,y+bh/2,bw/70,true,P.yel);
       c.fillStyle=P.wood;rr(c,x-bw/2,y-bh/2+lift,bw,bh,6);c.fill();c.strokeStyle='#8B6B3E';c.lineWidth=4;c.strokeRect(x-bw/2+6,y-bh/2+6+lift,bw-12,bh-12);
       if(S.phase==='reveal'&&k===S.pick){c.strokeStyle=k===S.under?P.grn:P.red;c.lineWidth=5;rr(c,x-bw/2-6,y-bh/2-6+lift,bw+12,bh+12,8);c.stroke()}}
