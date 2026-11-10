@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta name="description" content="In-Touch: a physical theatre work by Xolani Tsepetsi in collaboration with Keith “Keke” Mahlangu. Wits Downstairs Theatre, 11 and 13 November 2026, 11am. Read the story and play Around the Clock.">
+<meta name="description" content="In-Touch: a physical theatre work by Xolani Tsepetsi in collaboration with Keith “Keke” Mahlangu. Wits Downstairs Theatre, 11 and 13 November 2026, 11:30am. Read the story and play Around the Clock.">
 <meta name="theme-color" content="#F2EEE6">
 <style>*,*::before,*::after{box-sizing:border-box}:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0;font:14px system-ui,sans-serif}img{max-width:100%}[hidden]{display:none!important}</style>
 <title>In-Touch</title>
@@ -1069,7 +1069,7 @@ const HAZ=[
  {low:'the hands of the clock',high:'forgotten names',wall:'fading'}
 ];
 const CREDITS=[
- {r:'A PHYSICAL THEATRE WORK',n:'In-Touch',l:'Wits Downstairs Theatre · 11 & 13 November 2026 · 11am',big:1},
+ {r:'A PHYSICAL THEATRE WORK',n:'In-Touch',l:'Wits Downstairs Theatre · 11 & 13 November 2026 · 11:30am',big:1},
  {r:'CONCEPT, CHOREOGRAPHY & DIRECTION',n:'Xolani Tsepetsi',l:'Choreography IV'},
  {r:'SCENOGRAPHY, COSTUME & AUDIENCE DESIGN',n:'Keith “Keke” Mahlangu',l:'Design IVB · and this game'},
  {r:'STAGE MANAGER',n:'Noluthando Ngomezulu',l:'Keeping time on the clock'},
@@ -1630,7 +1630,7 @@ function ending(){S.state='end';const b=SAVE.bond;let t,x;
 const FEEDBACK={url:'https://docs.google.com/forms/d/e/1FAIpQLSd1udnirSpA1rTbUeIe_TKZ81j6hRZNvuocRgxJtqfyn9kT1Q/formResponse',name:'entry.605693684',rating:'entry.1964740323',level:'entry.341669475',comment:'entry.671243751'}; // a Google Form's formResponse address and entry ids, once you send the form
 function openFeedback(from){S.fbFrom=from;fbRate=0;$('fb-text').value='';$('fb-thanks').hidden=true;$('fb-form').hidden=false;drawRate();screen('s-fb')}
 let fbRate=0;function drawRate(){[...$('fb-stars').children].forEach((b,k)=>{b.classList.toggle('on',k<fbRate);b.setAttribute('aria-pressed',k<fbRate)})}
-function call(yes){$('e-line').textContent=(yes?'Then come and see them try. ':'Then come and watch them try. ')+'Wits Downstairs Theatre, 11 & 13 November, 11am.';$('e-call').hidden=true;$('e-after').hidden=false;
+function call(yes){$('e-line').textContent=(yes?'Then come and see them try. ':'Then come and watch them try. ')+'Wits Downstairs Theatre, 11 & 13 November, 11:30am.';$('e-call').hidden=true;$('e-after').hidden=false;
   setTimeout(()=>{$('e-rate').hidden=false},1200);
   const roll=$('e-roll');roll.innerHTML=CREDITS.map(c=>'<div><small>'+c.r+'</small><b>'+c.n+'</b></div>').join('');roll.classList.remove('go2');void roll.offsetWidth;roll.classList.add('go2')}
 
